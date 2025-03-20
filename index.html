@@ -106,7 +106,7 @@
 
             // 向 FastAPI 后端发送请求
             try {
-                const response = await fetch('http://127.0.0.1:8000/user', {
+                const response = await fetch('http://192.168.0.128:8000/user', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
@@ -134,7 +134,7 @@
             }
 
             try {
-                const response = await fetch(`http://127.0.0.1:8000/user_check/${userId}`);
+                const response = await fetch(`http://192.168.0.128:8000/user_check/${userId}`);
                 const data = await response.json();
                 if (response.ok) {
                     const isAdult = data.is_adult ? "成年人" : "未成年";
