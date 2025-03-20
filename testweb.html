@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FastAPI 前端</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            background-color: #f4f4f9;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: auto;
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        h2 {
+            text-align: center;
+            color: #333;
+        }
+
+        label {
+            font-weight: bold;
+            margin-top: 10px;
+        }
+
+        input[type="text"], input[type="number"] {
+            width: 100%;
+            padding: 10px;
+            margin-top: 5px;
+            margin-bottom: 10px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+        }
+
+        button {
+            width: 100%;
+            padding: 10px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+            button:hover {
+                background-color: #45a049;
+            }
+
+        .message {
+            margin-top: 10px;
+            font-size: 16px;
+            text-align: center;
+        }
+
+        .item-list {
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>创建用户并查看信息</h2>
+
+        <!-- 创建用户表单 -->
+        <form id="userForm">
+            <label for="name">姓名：</label>
+            <input type="text" id="name" name="name" required placeholder="请输入姓名">
+
+            <label for="age">年龄：</label>
+            <input type="number" id="age" name="age" required placeholder="请输入年龄">
+
+            <button type="submit">创建用户</button>
+        </form>
+        <div class="message" id="message"></div>
+
+        <div class="item-list">
+            <h3>其他功能</h3>
+
+            <!-- 查询用户信息 -->
+            <label for="user_id">输入用户ID查询用户年龄：</label>
+            <input type="number" id="user_id" name="user_id" placeholder="请输入用户ID">
+            <button onclick="checkUserAge()">查询年龄</button>
+            <div class="message" id="user-info-message"></div>
+        </div>
+    </div>
+
+    <script>
+        // 获取表单和提示信息的元素
+        const form = document.getElementById('userForm');
+        const messageDiv = document.getElementById('message');
+        const userInfoMessageDiv = document.getElementById('user-info-message');
+
+        // 提交表单时处理
+        form.addEventListener('submit', async function (event) {
+            event.preventDefault();  // 防止默认提交行为
+
+            const name = document.getElementById('name').value;
+            const age = document.getElementById('age').value;
+
+            // 向 FastAPI 后端发送请求
+            try {
+                const response = await fetch('http://127.0.0.1:8000/user', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ name, age: parseInt(age) })
+                });
+
+                if (response.ok) {
+                    const data = await response.json();
+                    messageDiv.textContent = `${name}，年龄：${age}. 用户已成功创建，用户ID：${data.user_id}`;
+                } else {
+                    messageDiv.textContent = '创建用户失败，请稍后再试。';
+                }
+            } catch (error) {
+                messageDiv.textContent = '网络错误，请检查后再试。';
+            }
+        });
+
+        // 查询用户信息并判断是否成年
+        async function checkUserAge() {
+            const userId = document.getElementById('user_id').value;
+            if (!userId) {
+                userInfoMessageDiv.textContent = '请输入用户ID';
+                return;
+            }
+
+            try {
+                const response = await fetch(`http://127.0.0.1:8000/user_check/${userId}`);
+                const data = await response.json();
+                if (response.ok) {
+                    const isAdult = data.is_adult ? "成年人" : "未成年";
+                    userInfoMessageDiv.textContent = `用户ID: ${data.user_id}, 用户名: ${data.user_name}, 年龄: ${data.age}岁, 状态: ${isAdult}`;
+                } else {
+                    userInfoMessageDiv.textContent = '未找到该用户';
+                }
+            } catch (error) {
+                userInfoMessageDiv.textContent = '网络错误，请检查后再试。';
+            }
+        }
+    </script>
+</body>
+</html>
