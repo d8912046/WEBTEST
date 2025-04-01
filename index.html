@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-    <title>Unity Web Player | ai_web</title>
+    <title>Unity Web Player | aitest</title>
     <link rel="shortcut icon" href="TemplateData/favicon.ico">
     <link rel="stylesheet" href="TemplateData/style.css">
    
@@ -22,7 +22,7 @@
         <div id="unity-footer">
             <div id="unity-logo-title-footer"></div>
             <div id="unity-fullscreen-button"></div>
-            <div id="unity-build-title">ai_web</div>
+            <div id="unity-build-title">aitest</div>
         </div>
     </div>
     <script>
@@ -54,16 +54,16 @@
       }
 
       var buildUrl = "Build";
-      var loaderUrl = buildUrl + "/web_exe.loader.js";
+      var loaderUrl = buildUrl + "/ai_web_exe.loader.js";
       var config = {
         arguments: [],
-        dataUrl: buildUrl + "/web_exe.data",
-        frameworkUrl: buildUrl + "/web_exe.framework.js",
-        codeUrl: buildUrl + "/web_exe.wasm",
+        dataUrl: buildUrl + "/ai_web_exe.data",
+        frameworkUrl: buildUrl + "/ai_web_exe.framework.js",
+        codeUrl: buildUrl + "/ai_web_exe.wasm",
         streamingAssetsUrl: "StreamingAssets",
         companyName: "DefaultCompany",
-        productName: "ai_web",
-        productVersion: "0.1.0",
+        productName: "aitest",
+        productVersion: "1.1.2",
         showBanner: unityShowBanner,
       };
 
@@ -114,7 +114,7 @@
               }).then((unityInstance) => {
                 document.querySelector("#unity-loading-bar").style.display = "none";
                 document.querySelector("#unity-fullscreen-button").onclick = () => {
-                  unityInstance.SetFullscreen(1);
+                  document.makeFullscreen('unity-container');
                 };
 
               }).catch((message) => {
